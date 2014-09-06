@@ -28,11 +28,11 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.509</version>
+    <version>1.568</version>
   </parent>
 
   <artifactId>subversion</artifactId>
-  <version>2.4.3</version>
+  <version>2.4.3-zodiac</version>
   <packaging>hpi</packaging>
 
   <name>Jenkins Subversion Plug-in</name>
@@ -52,10 +52,10 @@ THE SOFTWARE.
   </developers>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-    <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>subversion-2.4.3</tag>
+    <connection>scm:git:git://github.com/build-developonbox-ru/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:build-developonbox-ru/${project.artifactId}-plugin.git</developerConnection>
+    <url>http://github.com/build-developonbox-ru/${project.artifactId}-plugin</url>
+    <tag>subversion-2.4.3-zodiac</tag>
   </scm>
   <distributionManagement>
     <repository>
@@ -65,7 +65,7 @@ THE SOFTWARE.
   </distributionManagement>
 
   <properties>
-    <maven-hpi-plugin.version>1.96</maven-hpi-plugin.version>
+    <maven-hpi-plugin.version>1.109</maven-hpi-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
