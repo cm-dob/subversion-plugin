@@ -738,8 +738,7 @@ public class SubversionSCMTest extends AbstractSubversionTest {
         String[] invalidUsernames = new String[] {
             "\\user",
             "DOMAIN\\",
-            "DOMAIN@user",
-            "DOMAIN.user" };
+            "DOMAIN@user" };
 
         for (String invalidUsername : invalidUsernames) {
             assertEquals(
