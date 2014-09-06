@@ -55,7 +55,7 @@ THE SOFTWARE.
     <connection>scm:git:git://github.com/build-developonbox-ru/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:build-developonbox-ru/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/build-developonbox-ru/${project.artifactId}-plugin</url>
-    <tag>subversion-2.4.4-zodiac</tag>
+    <tag>subversion-2.4.4-zodiac-0.1</tag>
   </scm>
   <distributionManagement>
     <repository>
