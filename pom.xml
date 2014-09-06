@@ -28,11 +28,11 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.568</version>
+    <version>1.578</version>
   </parent>
 
   <artifactId>subversion</artifactId>
-  <version>2.4.3-zodiac</version>
+  <version>2.4.3-zodiac-0.1</version>
   <packaging>hpi</packaging>
 
   <name>Jenkins Subversion Plug-in</name>
