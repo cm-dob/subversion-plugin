@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.568</version>
+    <version>1.578</version>
   </parent>
 
   <artifactId>subversion</artifactId>
@@ -52,9 +52,10 @@ THE SOFTWARE.
   </developers>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-    <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
+
+    <connection>scm:git:git://github.com/cm-dob/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:cm-dob${project.artifactId}-plugin.git</developerConnection>
+    <url>http://github.com/cm-dob/${project.artifactId}-plugin</url>
     <tag>subversion-2.5.7</tag>
   </scm>
   <distributionManagement>
@@ -65,7 +66,7 @@ THE SOFTWARE.
   </distributionManagement>
 
   <properties>
-    <maven-hpi-plugin.version>1.96</maven-hpi-plugin.version>
+    <maven-hpi-plugin.version>1.109</maven-hpi-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
