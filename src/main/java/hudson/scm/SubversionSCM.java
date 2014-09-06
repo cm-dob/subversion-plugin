@@ -904,7 +904,10 @@ public class SubversionSCM extends SCM implements Serializable {
 
         List<External> externals = new ArrayList<External>();
         Set<String> unauthenticatedRealms = new LinkedHashSet<String>();
-        for (ModuleLocation location : getLocations(env, build)) {
+        // after fix https://issues.jenkins-ci.org/browse/JENKINS-7461 we should sort moduleLocations by localDir, because of possible nested folders (e.g. - '.')
+        ModuleLocation[] moduleLocations = getLocations(env, build);
+        Arrays.sort(moduleLocations);
+        for (ModuleLocation location : moduleLocations) {
             CheckOutTask checkOutTask =
                     new CheckOutTask(build, this, location, build.getTimestamp().getTime(), listener, env);
             externals.addAll(workspace.act(checkOutTask));
@@ -2387,9 +2390,9 @@ public class SubversionSCM extends SCM implements Serializable {
 
         /**
          * Regular expression for matching one username. Matches 'windows' names ('DOMAIN&#92;user') and
-         * 'normal' names ('user'). Where user (and DOMAIN) has one or more characters in 'a-zA-Z_0-9')
+         * 'normal' names ('user'). Where user (and DOMAIN) has one or more characters in 'a-zA-Z_0-9'. User can also have characters '.'.)
          */
-        private static final Pattern USERNAME_PATTERN = Pattern.compile("(\\w+\\\\)?+(\\w+)");
+        private static final Pattern USERNAME_PATTERN = Pattern.compile("(\\w+\\\\)?+([\\w\\.]+)");
 
         /**
          * Validates the excludeUsers field
@@ -2587,7 +2590,7 @@ public class SubversionSCM extends SCM implements Serializable {
      * to make failure messages when doing a checkout possible
      */
     @ExportedBean
-    public static final class ModuleLocation extends AbstractDescribableImpl<ModuleLocation> implements Serializable {
+    public static final class ModuleLocation extends AbstractDescribableImpl<ModuleLocation> implements Serializable, Comparable<ModuleLocation>  {
         /**
          * Subversion URL to check out.
          *
@@ -3089,6 +3092,10 @@ public class SubversionSCM extends SCM implements Serializable {
             }
 
         }
+
+        public int compareTo(ModuleLocation that) {
+            return this.getLocalDir().compareTo(that.getLocalDir());
+        }   
     }
 
     private static final Logger LOGGER = Logger.getLogger(SubversionSCM.class.getName());
