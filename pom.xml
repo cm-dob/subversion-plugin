@@ -48,9 +48,9 @@ THE SOFTWARE.
   </licenses>
 
   <scm>
-    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-    <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
+    <connection>scm:git:git://github.com/dob/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:dob/${project.artifactId}-plugin.git</developerConnection>
+    <url>http://github.com/dob/${project.artifactId}-plugin</url>
     <tag>subversion-2.9</tag>
   </scm>
 
