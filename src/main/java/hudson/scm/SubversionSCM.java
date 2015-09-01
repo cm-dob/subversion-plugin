@@ -76,6 +76,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.WeakHashMap;
+import java.util.Calendar;
 
 import hudson.security.ACL;
 import hudson.util.ListBoxModel;
@@ -231,6 +232,8 @@ public class SubversionSCM extends SCM implements Serializable {
     private String excludedRevprop;
     private String excludedCommitMessages;
 
+    private boolean useUpstreamTimestamp;
+
     private WorkspaceUpdater workspaceUpdater;
 
     // No longer in use but left for serialization compatibility.
@@ -299,7 +302,7 @@ public class SubversionSCM extends SCM implements Serializable {
      */
     public SubversionSCM(List<ModuleLocation> locations,
             boolean useUpdate, SubversionRepositoryBrowser browser, String excludedRegions, String excludedUsers, String excludedRevprop, String excludedCommitMessages) {
-    	this(locations, useUpdate, false, browser, excludedRegions, excludedUsers, excludedRevprop, excludedCommitMessages);
+        this(locations, useUpdate, false, browser, excludedRegions, excludedUsers, excludedRevprop, excludedCommitMessages);
     }
 
     /**
@@ -347,12 +350,12 @@ public class SubversionSCM extends SCM implements Serializable {
             String excludedRevprop, String excludedCommitMessages,
             String includedRegions, boolean ignoreDirPropChanges, boolean filterChangelog,
             List<AdditionalCredentials> additionalCredentials) {
-        this(locations, workspaceUpdater, browser, excludedRegions, excludedUsers, excludedRevprop, excludedCommitMessages, 
+        this(locations, false, workspaceUpdater, browser, excludedRegions, excludedUsers, excludedRevprop, excludedCommitMessages,
             includedRegions, ignoreDirPropChanges, filterChangelog, additionalCredentials, false);
     }
 
     @DataBoundConstructor
-    public SubversionSCM(List<ModuleLocation> locations, WorkspaceUpdater workspaceUpdater,
+    public SubversionSCM(List<ModuleLocation> locations, boolean useUpstreamTimestamp, WorkspaceUpdater workspaceUpdater,
                          SubversionRepositoryBrowser browser, String excludedRegions, String excludedUsers,
                          String excludedRevprop, String excludedCommitMessages,
                          String includedRegions, boolean ignoreDirPropChanges, boolean filterChangelog,
@@ -371,6 +374,7 @@ public class SubversionSCM extends SCM implements Serializable {
             this.additionalCredentials = new ArrayList<AdditionalCredentials>(additionalCredentials);
         }
 
+        this.useUpstreamTimestamp = useUpstreamTimestamp;
         this.workspaceUpdater = workspaceUpdater;
         this.browser = browser;
         this.excludedRegions = excludedRegions;
@@ -433,7 +437,7 @@ public class SubversionSCM extends SCM implements Serializable {
      */
     @Exported
     public ModuleLocation[] getLocations() {
-    	return getLocations(null, null);
+        return getLocations(null, null);
     }
 
     @Override public String getKey() {
@@ -467,6 +471,10 @@ public class SubversionSCM extends SCM implements Serializable {
 
     public void setWorkspaceUpdater(WorkspaceUpdater workspaceUpdater) {
         this.workspaceUpdater = workspaceUpdater;
+    }
+
+    public boolean isUseUpstreamTimestamp() {
+        return useUpstreamTimestamp;
     }
 
     /**
@@ -804,36 +812,36 @@ public class SubversionSCM extends SCM implements Serializable {
             try {
                 String line;
                 while((line=br.readLine())!=null) {
-                	boolean isPinned = false;
-                	int indexLast = line.length();
-                	if (line.lastIndexOf("::p") == indexLast-3) {
-                		isPinned = true;
-                		indexLast -= 3;
-                	}
-                	int index = line.lastIndexOf('/');
+                    boolean isPinned = false;
+                    int indexLast = line.length();
+                    if (line.lastIndexOf("::p") == indexLast-3) {
+                        isPinned = true;
+                        indexLast -= 3;
+                    }
+                    int index = line.lastIndexOf('/');
                     if(index<0) {
                         continue;   // invalid line?
                     }
                     try {
-                    	String url = line.substring(0, index);
-                    	long revision = Long.parseLong(line.substring(index+1,indexLast));
-                    	Long oldRevision = revisions.get(url);
-                    	if (isPinned) {
-                    		if (!prunePinnedExternals) {
-                    			if (oldRevision == null)
-                    				// If we're writing pinned, only write if there are no unpinned
-                    				revisions.put(url, revision);
-                    		}
-                    	} else {
-                    		// unpinned
-                        	if (oldRevision == null || oldRevision > revision)
-                        		// For unpinned, take minimum
-                        		revisions.put(url, revision);
-                    	}
-                	} catch (NumberFormatException e) {
-                	    // perhaps a corrupted line.
-                	    LOGGER.log(WARNING, "Error parsing line " + line, e);
-                	}
+                        String url = line.substring(0, index);
+                        long revision = Long.parseLong(line.substring(index+1,indexLast));
+                        Long oldRevision = revisions.get(url);
+                        if (isPinned) {
+                            if (!prunePinnedExternals) {
+                                if (oldRevision == null)
+                                    // If we're writing pinned, only write if there are no unpinned
+                                    revisions.put(url, revision);
+                            }
+                        } else {
+                            // unpinned
+                            if (oldRevision == null || oldRevision > revision)
+                                // For unpinned, take minimum
+                                revisions.put(url, revision);
+                        }
+                    } catch (NumberFormatException e) {
+                        // perhaps a corrupted line.
+                        LOGGER.log(WARNING, "Error parsing line " + line, e);
+                    }
                 }
             } finally {
                 br.close();
@@ -919,6 +927,20 @@ public class SubversionSCM extends SCM implements Serializable {
             }
             return null;
         }
+
+        Calendar timestamp = null;
+        if (useUpstreamTimestamp) {
+            Cause.UpstreamCause upstreamCause = (Cause.UpstreamCause)build.getCause(Cause.UpstreamCause.class);
+            if (upstreamCause != null) {
+                Run upstreamBuild = upstreamCause.getUpstreamRun();
+                if (upstreamBuild != null) {
+                    timestamp = upstreamBuild.getTimestamp();
+                    listener.getLogger().println("Use timestamp from upstream project " + upstreamBuild.getParent().getName() + ", build #" + upstreamBuild.getNumber());
+                }
+            }
+
+        }
+        if (timestamp == null) timestamp = build.getTimestamp();
 
         List<External> externals = new ArrayList<External>();
         Set<String> unauthenticatedRealms = new LinkedHashSet<String>();
@@ -2792,7 +2814,7 @@ public class SubversionSCM extends SCM implements Serializable {
          * possible "@NNN" suffix.
          */
         public String getURL() {
-        	return SvnHelper.getUrlWithoutRevision(remote);
+            return SvnHelper.getUrlWithoutRevision(remote);
         }
 
         /**
