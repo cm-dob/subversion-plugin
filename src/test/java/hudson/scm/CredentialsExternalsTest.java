@@ -115,7 +115,7 @@ public class CredentialsExternalsTest {
                     new UsernamePasswordCredentialsImpl(CredentialsScope.GLOBAL, "ext-creds", null, "bob", "bob"))));
                 p.setScm(new SubversionSCM(
                     Collections.singletonList(new SubversionSCM.ModuleLocation("svn://localhost:" + mainPort + "/prj/trunk", "main-creds", ".", "", false)),
-                    null, null, null, null, null, null, null, false, false, // WTF was all that?
+                    false, null, null, null, null, null, null, null, false, false, // WTF was all that?
                     Collections.singletonList(new SubversionSCM.AdditionalCredentials("<svn://localhost:" + extPort + "> " + ext.uuid(), "ext-creds"))));
                 FreeStyleBuild b = r.buildAndAssertSuccess(p);
                 assertEquals("", b.getWorkspace().child("file").readToString());

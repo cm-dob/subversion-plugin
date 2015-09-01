@@ -30,7 +30,11 @@ THE SOFTWARE.
   
   <f:entry title="${%Additional Credentials}" help="/descriptor/hudson.scm.SubversionSCM/help/additionalCredentials">
     <f:repeatableProperty field="additionalCredentials" add="${%Add additional credentials...}"/>
- </f:entry>
+  </f:entry>
+
+  <f:entry title="${%Use upstream build timestamp}" field="useUpstreamTimestamp">
+    <f:checkbox default="false" checked="${instance.useUpstreamTimestamp}"/>
+  </f:entry>
 
   <f:dropdownDescriptorSelector title="${%Check-out Strategy}" field="workspaceUpdater" descriptors="${descriptor.getWorkspaceUpdaterDescriptors()}"/>
 
