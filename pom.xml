@@ -36,7 +36,7 @@ THE SOFTWARE.
   <packaging>hpi</packaging>
 
   <name>Jenkins Subversion Plug-in</name>
-  <url>http://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Subversion+Plugin</url>
   <licenses>
     <license>
       <name>MIT license</name>
@@ -55,13 +55,13 @@ THE SOFTWARE.
 
     <connection>scm:git:git://github.com/cm-dob/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:cm-dob${project.artifactId}-plugin.git</developerConnection>
-    <url>http://github.com/cm-dob/${project.artifactId}-plugin</url>
+    <url>https://github.com/cm-dob/${project.artifactId}-plugin</url>
     <tag>subversion-2.5.7</tag>
   </scm>
   <distributionManagement>
     <repository>
       <id>maven.jenkins-ci.org</id>
-      <url>http://maven.jenkins-ci.org/content/repositories/releases/</url>
+      <url>https://maven.jenkins-ci.org/content/repositories/releases/</url>
     </repository>
   </distributionManagement>
 
@@ -73,18 +73,18 @@ THE SOFTWARE.
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>httpss://repo.jenkins-ci.org/public/</url>
     </repository>
 
     <repository>
       <id>mavenTMateSoftReleasesRepository</id>
-      <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
+      <url>https://maven.tmatesoft.com/content/repositories/releases/</url>
     </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
       <id>repo.jenkins-ci.org</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>httpss://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
 
@@ -166,6 +166,11 @@ THE SOFTWARE.
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
           <version>2.5.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.kohsuke</groupId>
+          <artifactId>access-modifier-checker</artifactId>
+          <version>1.7</version>
         </plugin>
       </plugins>
     </pluginManagement>
